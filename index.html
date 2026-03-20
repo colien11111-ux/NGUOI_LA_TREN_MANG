@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>AI An Toàn Mạng - Đặng Thị Ngọc Diễm</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#eef2ff;
+display:flex;
+justify-content:center;
+}
+
+/* bố cục */
+
+#container{
+display:flex;
+gap:20px;
+max-width:1000px;
+width:100%;
+}
+
+/* khung chat */
+
+#app{
+width:420px;
+height:100vh;
+background:white;
+display:flex;
+flex-direction:column;
+}
+
+/* header */
+
+#header{
+background:#1877f2;
+color:white;
+padding:12px;
+text-align:center;
+font-weight:bold;
+}
+
+/* điểm */
+
+#score{
+text-align:center;
+font-weight:bold;
+padding:5px;
+}
+
+/* khung tin nhắn */
+
+#messages{
+flex:1;
+overflow:auto;
+padding:10px;
+display:flex;
+flex-direction:column;
+}
+
+.row{
+display:flex;
+margin:6px 0;
+}
+
+.avatar{
+width:30px;
+height:30px;
+border-radius:50%;
+background:#ddd;
+display:flex;
+align-items:center;
+justify-content:center;
+margin-right:6px;
+}
+
+.msg{
+padding:10px;
+border-radius:16px;
+max-width:70%;
+}
+
+.stranger{
+background:#f1f0f0;
+}
+
+.student{
+background:#1877f2;
+color:white;
+margin-left:auto;
+}
+
+/* nhập */
+
+#input{
+display:flex;
+padding:10px;
+border-top:1px solid #ddd;
+}
+
+#text{
+flex:1;
+padding:10px;
+border-radius:20px;
+border:1px solid #ccc;
+}
+
+button{
+padding:10px;
+margin-left:5px;
+}
+
+/* cảnh báo */
+
+#warning{
+color:red;
+text-align:center;
+font-weight:bold;
+}
+
+/* panel */
+
+#panel{
+width:350px;
+background:white;
+padding:10px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:5px;
+text-align:center;
+}
+
+/* mobile */
+
+@media (max-width:768px){
+
+#container{
+flex-direction:column;
+}
+
+#panel{
+width:100%;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="container">
+
+<div id="app">
+
+<div id="header">
+
+ AI NGƯỜI LẠ TRÊN MẠNG  
+<br>
+<small>(Được xây dựng bởi Đặng Thị Ngọc Diễm) </small>
+
+</div>
+
+<div id="score">Điểm an toàn: 100</div>
+
+<div id="messages"></div>
+
+<div id="warning"></div>
+
+<div id="input">
+
+<input id="text" placeholder="Nhập tin nhắn...">
+<button onclick="send()">Gửi</button>
+
+</div>
+
+</div>
+
+<div id="panel">
+
+<h3>Bảng xếp hạng học sinh</h3>
+
+<table id="ranking">
+
+<tr>
+<th>Tên</th>
+<th>Điểm</th>
+</tr>
+
+</table>
+
+<h3>Biểu đồ lớp</h3>
+
+<canvas id="chart"></canvas>
+
+</div>
+
+</div>
+
+<script>
+
+let score=100
+let index=0
+let safeCount=0
+let dangerCount=0
+
+/* random */
+
+function rand(arr){
+return arr[Math.floor(Math.random()*arr.length)]
+}
+
+/* AI sinh câu lừa đảo */
+
+function generateScam(){
+
+let intro=[
+"Chào em",
+"Hi bạn",
+"Bạn ơi",
+"Mình hỏi chút",
+"Online không"
+]
+
+let scam=[
+"mình có cách nhận kim cương Free Fire",
+"mình đang phát quà game miễn phí",
+"mình có tài khoản game VIP",
+"mình có link nhận quà TikTok",
+"mình biết cách hack game"
+]
+
+let action=[
+"cho mình số điện thoại nhé",
+"vào link mình gửi thử đi",
+"kết bạn Zalo với mình nha",
+"chuyển 50k để kích hoạt",
+"gửi ảnh màn hình cho mình xem"
+]
+
+let trust=[
+"nhiều bạn đã nhận rồi",
+"không mất gì đâu",
+"mình làm cho nhiều bạn rồi",
+"đảm bảo thật",
+"mình chỉ nhắn riêng cho bạn thôi"
+]
+
+let secret=[
+"đừng nói với ai nhé",
+"bí mật nha",
+"chỉ mình bạn biết thôi"
+]
+
+let style=Math.floor(Math.random()*5)
+
+if(style==0)
+return rand(intro)+" "+rand(scam)
+
+if(style==1)
+return rand(scam)+" . "+rand(action)
+
+if(style==2)
+return rand(intro)+" . "+rand(scam)+" . "+rand(trust)
+
+if(style==3)
+return rand(scam)+" . "+rand(action)+" . "+rand(secret)
+
+if(style==4)
+return rand(intro)+" . "+rand(scam)+" . "+rand(action)
+
+}
+
+/* hiển thị chat */
+
+function addMessage(text,type){
+
+let row=document.createElement("div")
+row.className="row"
+
+let msg=document.createElement("div")
+msg.className="msg "+type
+msg.innerText=text
+
+if(type=="stranger"){
+
+let avatar=document.createElement("div")
+avatar.className="avatar"
+avatar.innerText="👤"
+
+row.appendChild(avatar)
+row.appendChild(msg)
+
+}else{
+
+msg.className="msg student"
+row.appendChild(msg)
+
+}
+
+document.getElementById("messages").appendChild(row)
+
+document.getElementById("messages").scrollTop=9999
+
+}
+
+/* gửi */
+
+function send(){
+
+let text=document.getElementById("text").value
+
+if(text=="") return
+
+addMessage(text,"student")
+
+evaluate(text)
+
+document.getElementById("text").value=""
+
+setTimeout(reply,800)
+
+}
+
+/* AI trả lời */
+
+function reply(){
+
+if(index<8){
+
+let text=generateScam()
+
+addMessage(text,"stranger")
+
+detect(text)
+
+index++
+
+}else{
+
+finish()
+
+}
+
+}
+
+/* phát hiện nguy cơ */
+
+function detect(text){
+
+let danger=["chuyển","tiền","ảnh","số điện thoại","bí mật"]
+
+for(let w of danger){
+
+if(text.toLowerCase().includes(w)){
+
+document.getElementById("warning").innerText=
+"⚠ Cảnh báo: Tin nhắn có dấu hiệu lừa đảo!"
+
+}
+
+}
+
+}
+
+/* đánh giá */
+
+function evaluate(text){
+
+let safe=["không","báo","thầy","cô","cha mẹ","công an","nhầm","lộn","méc","không cần"]
+
+let danger=["ok","được","gửi","có","dạ","okay","muốn","ừ","uh","vâng","ô sờ kê"]
+
+for(let w of safe){
+
+if(text.toLowerCase().includes(w)) score+=5
+
+}
+
+for(let w of danger){
+
+if(text.toLowerCase().includes(w)) score-=10
+
+}
+
+document.getElementById("score").innerText="Điểm an toàn: "+score
+
+}
+
+/* kết thúc */
+
+function finish(){
+
+let name=prompt("Nhập tên học sinh")
+
+let table=document.getElementById("ranking")
+
+let row=table.insertRow()
+
+row.insertCell(0).innerText=name
+row.insertCell(1).innerText=score
+
+if(score>=100) safeCount++
+else dangerCount++
+
+drawChart()
+
+/* kết luận */
+
+let result=""
+
+if(score>=100){
+
+result="✅ Em xử lý tình huống rất an toàn."
+
+}
+else if(score>=60){
+
+result="⚠ Em cần cảnh giác hơn với người lạ trên mạng."
+
+}
+else{
+
+result="❌ Em có nguy cơ bị lừa đảo trên mạng."
+
+}
+
+alert(result)
+
+}
+
+/* biểu đồ */
+
+function drawChart(){
+
+new Chart(document.getElementById("chart"),{
+
+type:"pie",
+
+data:{
+labels:["An toàn","Nguy cơ"],
+datasets:[{
+data:[safeCount,dangerCount]
+}]
+}
+
+})
+
+}
+
+/* bắt đầu chat */
+
+reply()
+
+</script>
+
+</body>
+</html>
