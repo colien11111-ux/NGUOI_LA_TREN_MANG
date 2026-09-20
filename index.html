@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SafeShield - Kỹ Năng Từ Chối</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -11,70 +11,79 @@
             to { opacity: 1; transform: translateY(0); }
         }
         /* Tùy chỉnh thanh cuộn cho đẹp mắt */
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Đảm bảo khung chat tự cuộn khi nội dung dài */
+        #chat-messages {
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
-<body class="bg-gray-100 h-screen flex justify-center items-center font-sans p-6">
+<!-- Body tối ưu cho thiết bị di động: p-0 trên mobile, flex center md trở lên -->
+<body class="bg-gray-100 h-screen md:flex md:justify-center md:items-center font-sans p-0 md:p-6 overflow-hidden">
 
-<!-- Khung giả lập thiết bị -->
-<div class="w-full max-w-6xl h-[95vh] flex flex-col bg-white rounded-[2rem] overflow-hidden relative border-[12px] border-[#374151] shadow-2xl">
+<!-- Khung giả lập thiết bị: Mặc định full màn hình, từ md trở lên thì tạo khung giả lập -->
+<div class="w-full h-full md:max-w-md lg:max-w-6xl md:h-[95vh] flex flex-col bg-white overflow-hidden relative md:rounded-[2rem] md:border-[12px] border-[#374151] md:shadow-2xl">
     
     <!-- Header -->
-    <div class="bg-[#2563eb] text-white py-4 px-6 flex-none flex items-center justify-between z-10 shadow-sm">
-        <div class="flex items-center gap-4">
+    <div class="bg-[#2563eb] text-white py-3 px-5 flex-none flex items-center justify-between z-10 shadow-sm border-b border-blue-700">
+        <div class="flex items-center gap-3">
             <!-- Avatar -->
-            <div class="relative">
-                <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-[#2563eb] text-3xl font-bold">
+            <div class="relative flex-shrink-0">
+                <div class="w-11 h-11 bg-white rounded-full flex items-center justify-center text-[#2563eb] text-2xl font-bold">
                     T
                 </div>
                 <!-- Dấu chấm xanh online -->
-                <div class="absolute bottom-0 right-0 w-4 h-4 bg-[#31a24c] border-2 border-white rounded-full"></div>
+                <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#31a24c] border-2 border-white rounded-full"></div>
             </div>
             <!-- Thông tin -->
             <div>
-                <h1 class="text-2xl font-bold">Tuấn (Bạn online)</h1>
-                <p class="text-sm text-blue-100">Đang hoạt động</p>
+                <h1 class="text-xl font-bold leading-tight">Tuấn (Bạn online)</h1>
+                <p class="text-xs text-blue-100">Đang hoạt động</p>
             </div>
         </div>
         <!-- Nút Tải lại -->
-        <button onclick="location.reload()" class="p-2 hover:bg-blue-700 rounded-full transition-colors" title="Làm mới cuộc trò chuyện">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        <button onclick="location.reload()" class="p-1.5 hover:bg-blue-700 rounded-full transition-colors" title="Làm mới cuộc trò chuyện">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
         </button>
     </div>
 
     <!-- Chat Box -->
-    <div id="chat-box" class="flex-1 overflow-y-auto p-8 space-y-6 bg-white pb-10">
+    <div id="chat-messages" class="flex-1 overflow-y-auto p-5 space-y-5 bg-gray-50 pb-12">
         <!-- Tin nhắn sẽ hiển thị ở đây -->
     </div>
 
     <!-- Khung nhập tin nhắn -->
-    <div class="bg-white p-6 border-t border-gray-200 flex-none z-10">
-        <form id="chat-form" class="flex gap-4 items-center">
-            <input type="text" id="user-input" autocomplete="off" class="flex-1 bg-[#f0f2f5] border-none rounded-full px-6 py-4 text-2xl focus:outline-none focus:ring-2 focus:ring-[#2563eb] transition-all placeholder-gray-500 text-gray-800" placeholder="Nhắn tin từ chối...">
-            <button type="submit" class="bg-[#2563eb] hover:bg-blue-700 text-white rounded-full p-4 w-16 h-16 flex items-center justify-center shrink-0 transition-transform hover:scale-105 shadow-md">
-                <svg class="w-8 h-8 transform rotate-45 -mt-1 -ml-1" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+    <div class="bg-white p-4 border-t border-gray-200 flex-none z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <!-- Chú ý: input và button nằm cùng form -->
+        <form id="chat-form" class="flex gap-3 items-center" action="#">
+            <input type="text" id="user-input" autocomplete="off" class="flex-1 bg-[#f0f2f5] border-none rounded-full px-5 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[#2563eb] transition-all placeholder-gray-500 text-gray-800" placeholder="Nhắn tin từ chối...">
+            <!-- Thêm ID cho nút gửi để dễ bắt sự kiện click -->
+            <button type="submit" id="send-btn" class="bg-[#2563eb] hover:bg-blue-700 text-white rounded-full p-3.5 w-14 h-14 flex items-center justify-center flex-shrink-0 transition-transform hover:scale-105 shadow-md">
+                <svg class="w-7 h-7 transform rotate-45 -mt-1 -ml-1" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
             </button>
         </form>
     </div>
 
     <!-- Bảng điểm kết quả -->
-    <div id="result-overlay" class="absolute inset-0 bg-black/80 hidden flex-col justify-center items-center z-50 p-8 text-center backdrop-blur-sm">
-        <div id="result-card" class="bg-white rounded-3xl p-10 max-w-4xl w-full transform scale-95 transition-transform duration-300 shadow-2xl">
-            <h2 id="result-title" class="text-5xl font-extrabold mb-4"></h2>
-            <p id="result-score" class="text-6xl font-black mb-6"></p>
-            <p id="result-message" class="text-2xl text-gray-700 mb-8 leading-relaxed"></p>
-            <button onclick="location.reload()" class="bg-[#2563eb] hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-full text-2xl transition-transform hover:scale-105 shadow-xl">Thử lại tình huống</button>
+    <div id="result-overlay" class="absolute inset-0 bg-black/80 hidden flex-col justify-center items-center z-50 p-6 text-center backdrop-blur-sm">
+        <div id="result-card" class="bg-white rounded-3xl p-8 w-full max-w-lg transform scale-95 transition-transform duration-300 shadow-2xl">
+            <h2 id="result-title" class="text-4xl font-extrabold mb-4"></h2>
+            <p id="result-score" class="text-5xl font-black mb-6"></p>
+            <p id="result-message" class="text-xl text-gray-700 mb-8 leading-relaxed"></p>
+            <button onclick="location.reload()" class="bg-[#2563eb] hover:bg-blue-700 text-white font-bold py-3.5 px-10 rounded-full text-xl transition-transform hover:scale-105 shadow-xl">Thử lại tình huống</button>
         </div>
     </div>
 </div>
 
 <script>
-    const chatBox = document.getElementById('chat-box');
+    const chatMessages = document.getElementById('chat-messages');
     const chatForm = document.getElementById('chat-form');
     const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
     const resultOverlay = document.getElementById('result-overlay');
     const resultTitle = document.getElementById('result-title');
     const resultScore = document.getElementById('result-score');
@@ -84,9 +93,8 @@
     const maxTurns = 5;
 
     window.onload = () => {
-        // Tuấn gửi tin nhắn mồi ngay khi load trang
         setTimeout(() => {
-            addMessage("ai", "Ê bạn, đợt này ôn thi căng quá nhỉ. Mình có loại kẹo tỉnh táo này hay lắm, ngậm vào học xuyên đêm không biết mệt. Dùng thử một viên không?");
+            addMessage("ai", "Ê rảnh không? Đợt này ôn thi căng quá nhỉ. Mình có loại 'kẹo tỉnh táo' này hay lắm, ngậm vào học xuyên đêm không biết mệt. Dùng thử một viên không?");
         }, 500);
     };
 
@@ -94,26 +102,30 @@
         const msgDiv = document.createElement('div');
         msgDiv.className = `flex ${type === 'user' ? 'justify-end' : 'justify-start'} animate-[fadeIn_0.3s_ease-out]`;
         
-        // Giao diện bong bóng chat mới
+        // Cập nhật: bubbleStyle dùng text-base (chuẩn điện thoại) thay vì text-2xl (chữ quá to) [cite: 3]
         const bubbleStyle = type === 'user' 
-            ? 'bg-[#2563eb] text-white rounded-[2rem] rounded-br-md' 
-            : 'bg-[#f0f2f5] text-gray-900 rounded-[2rem] rounded-bl-md border border-gray-100';
+            ? 'bg-[#2563eb] text-white rounded-[1.5rem] rounded-br-md' 
+            : 'bg-[#f0f2f5] text-gray-900 rounded-[1.5rem] rounded-bl-md border border-gray-100 shadow-sm';
 
         msgDiv.innerHTML = `
-            <div class="max-w-[75%] ${bubbleStyle} text-2xl px-6 py-4 shadow-sm leading-relaxed">
+            <div class="max-w-[75%] ${bubbleStyle} text-base px-5 py-3.5 leading-relaxed">
                 ${text}
             </div>
         `;
-        chatBox.appendChild(msgDiv);
-        
-        // Cuộn xuống dòng mới nhất
-        chatBox.scrollTo({
-            top: chatBox.scrollHeight,
+        chatMessages.appendChild(msgDiv);
+        scrollToBottom();
+    }
+
+    // Tự động cuộn xuống tin nhắn cuối cùng [cite: 3]
+    function scrollToBottom() {
+        chatMessages.scrollTo({
+            top: chatMessages.scrollHeight,
             behavior: 'smooth'
         });
     }
 
-    chatForm.addEventListener('submit', (e) => {
+    // Xử lý gửi tin nhắn dứt khoát: lắng nghe click nút VÀ form submit
+    const handleSubmit = (e) => {
         e.preventDefault();
         const text = userInput.value.trim();
         if (!text) return;
@@ -124,7 +136,23 @@
         
         turnCount++;
         processAIResponse(text);
+    };
+
+    // Lắng nghe form submit (Dành cho Enter trên bàn phím)
+    chatForm.addEventListener('submit', handleSubmit);
+
+    // Xử lý Gửi dứt khoát: Bắt sự kiện click vào nút Gửi trên điện thoại
+    // Thêm preventDefault vào click để đảm bảo logic click chạy trước khi form submit
+    sendBtn.addEventListener('click', (e) => {
+        const text = userInput.value.trim();
+        // Nếu có text, thực hiện logic handleSubmit và ngăn form submit mặc định [cite: 3]
+        if(text) {
+            e.preventDefault();
+            handleSubmit(e);
+        }
     });
+
+    // ... Logic processAIResponse và showResult giữ nguyên [cite: 3] ...
 
     function processAIResponse(text) {
         const winRegex = /(báo|mách|gọi|nói|chặn|block|bắt).*(công an|ba|mẹ|thầy|cô|ông|bà|người lớn)/i;
@@ -161,7 +189,7 @@
                     addMessage("ai", reply);
                 }
             }
-        }, 1000); 
+        }, 1200); 
     }
 
     function showResult(status) {
@@ -175,19 +203,19 @@
 
         if (status === 'win') {
             resultTitle.innerText = "🏆 XỬ LÝ XUẤT SẮC!";
-            resultTitle.className = "text-5xl font-extrabold mb-4 text-green-600";
+            resultTitle.className = "text-4xl font-extrabold mb-4 text-green-600";
             resultScore.innerText = "Điểm an toàn: 100/100";
             resultScore.className = "text-5xl font-black mb-6 text-green-500";
             resultMessage.innerText = "Bạn đã có kỹ năng bảo vệ bản thân rất tốt! Việc dứt khoát từ chối và đe dọa báo cho người lớn hoặc cơ quan chức năng là cách hiệu quả nhất để chấm dứt sự rủ rê của kẻ xấu.";
         } else if (status === 'fail') {
             resultTitle.innerText = "❌ RẤT NGUY HIỂM!";
-            resultTitle.className = "text-5xl font-extrabold mb-4 text-red-600";
+            resultTitle.className = "text-4xl font-extrabold mb-4 text-red-600";
             resultScore.innerText = "Điểm an toàn: 0/100";
             resultScore.className = "text-5xl font-black mb-6 text-red-500";
             resultMessage.innerText = "Bạn đã sập bẫy và đồng ý dùng thử! Các loại ma túy ngụy trang (núp bóng kẹo, nước trái cây) chỉ cần thử 1 lần là có thể gây nghiện và tàn phá hệ thần kinh. Phải kiên quyết nói KHÔNG!";
         } else {
             resultTitle.innerText = "⚠️ CẦN DỨT KHOÁT HƠN";
-            resultTitle.className = "text-5xl font-extrabold mb-4 text-yellow-600";
+            resultTitle.className = "text-4xl font-extrabold mb-4 text-yellow-600";
             resultScore.innerText = "Điểm an toàn: 50/100";
             resultScore.className = "text-5xl font-black mb-6 text-yellow-500";
             resultMessage.innerText = "Tuy bạn chưa đồng ý nhưng cách từ chối của bạn còn quá yếu ớt. Kẻ xấu sẽ còn tiếp tục bám theo dụ dỗ. Hãy từ chối thẳng thừng và dọa báo người lớn!";
