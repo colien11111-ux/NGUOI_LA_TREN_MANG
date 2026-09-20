@@ -1,474 +1,198 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>AI An Toàn Mạng - Đặng Thị Ngọc Diễm</title>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-
-body{
-margin:0;
-font-family:Arial;
-background:#eef2ff;
-display:flex;
-justify-content:center;
-}
-
-/* bố cục */
-
-#container{
-display:flex;
-gap:20px;
-max-width:1000px;
-width:100%;
-}
-
-/* khung chat */
-
-#app{
-width:420px;
-height:100vh;
-background:white;
-display:flex;
-flex-direction:column;
-}
-
-/* header */
-
-#header{
-background:#1877f2;
-color:white;
-padding:12px;
-text-align:center;
-font-weight:bold;
-}
-
-/* điểm */
-
-#score{
-text-align:center;
-font-weight:bold;
-padding:5px;
-}
-
-/* khung tin nhắn */
-
-#messages{
-flex:1;
-overflow:auto;
-padding:10px;
-display:flex;
-flex-direction:column;
-}
-
-.row{
-display:flex;
-margin:6px 0;
-}
-
-.avatar{
-width:30px;
-height:30px;
-border-radius:50%;
-background:#ddd;
-display:flex;
-align-items:center;
-justify-content:center;
-margin-right:6px;
-}
-
-.msg{
-padding:10px;
-border-radius:16px;
-max-width:70%;
-}
-
-.stranger{
-background:#f1f0f0;
-}
-
-.student{
-background:#1877f2;
-color:white;
-margin-left:auto;
-}
-
-/* nhập */
-
-#input{
-display:flex;
-padding:10px;
-border-top:1px solid #ddd;
-}
-
-#text{
-flex:1;
-padding:10px;
-border-radius:20px;
-border:1px solid #ccc;
-}
-
-button{
-padding:10px;
-margin-left:5px;
-}
-
-/* cảnh báo */
-
-#warning{
-color:red;
-text-align:center;
-font-weight:bold;
-}
-
-/* panel */
-
-#panel{
-width:350px;
-background:white;
-padding:10px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-th,td{
-border:1px solid #ccc;
-padding:5px;
-text-align:center;
-}
-
-/* mobile */
-
-@media (max-width:768px){
-
-#container{
-flex-direction:column;
-}
-
-#panel{
-width:100%;
-}
-
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeShield - Kỹ Năng Từ Chối</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Tùy chỉnh thanh cuộn cho đẹp mắt */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
 </head>
+<body class="bg-gray-100 h-screen flex justify-center items-center font-sans p-6">
 
-<body>
+<!-- Khung giả lập thiết bị -->
+<div class="w-full max-w-6xl h-[95vh] flex flex-col bg-white rounded-[2rem] overflow-hidden relative border-[12px] border-[#374151] shadow-2xl">
+    
+    <!-- Header -->
+    <div class="bg-[#2563eb] text-white py-4 px-6 flex-none flex items-center justify-between z-10 shadow-sm">
+        <div class="flex items-center gap-4">
+            <!-- Avatar -->
+            <div class="relative">
+                <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-[#2563eb] text-3xl font-bold">
+                    T
+                </div>
+                <!-- Dấu chấm xanh online -->
+                <div class="absolute bottom-0 right-0 w-4 h-4 bg-[#31a24c] border-2 border-white rounded-full"></div>
+            </div>
+            <!-- Thông tin -->
+            <div>
+                <h1 class="text-2xl font-bold">Tuấn (Bạn online)</h1>
+                <p class="text-sm text-blue-100">Đang hoạt động</p>
+            </div>
+        </div>
+        <!-- Nút Tải lại -->
+        <button onclick="location.reload()" class="p-2 hover:bg-blue-700 rounded-full transition-colors" title="Làm mới cuộc trò chuyện">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        </button>
+    </div>
 
-<div id="container">
+    <!-- Chat Box -->
+    <div id="chat-box" class="flex-1 overflow-y-auto p-8 space-y-6 bg-white pb-10">
+        <!-- Tin nhắn sẽ hiển thị ở đây -->
+    </div>
 
-<div id="app">
+    <!-- Khung nhập tin nhắn -->
+    <div class="bg-white p-6 border-t border-gray-200 flex-none z-10">
+        <form id="chat-form" class="flex gap-4 items-center">
+            <input type="text" id="user-input" autocomplete="off" class="flex-1 bg-[#f0f2f5] border-none rounded-full px-6 py-4 text-2xl focus:outline-none focus:ring-2 focus:ring-[#2563eb] transition-all placeholder-gray-500 text-gray-800" placeholder="Nhắn tin từ chối...">
+            <button type="submit" class="bg-[#2563eb] hover:bg-blue-700 text-white rounded-full p-4 w-16 h-16 flex items-center justify-center shrink-0 transition-transform hover:scale-105 shadow-md">
+                <svg class="w-8 h-8 transform rotate-45 -mt-1 -ml-1" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+            </button>
+        </form>
+    </div>
 
-<div id="header">
-
- AI NGƯỜI LẠ TRÊN MẠNG  
-<br>
-<small>(Được xây dựng bởi Đặng Thị Ngọc Diễm) </small>
-
-</div>
-
-<div id="score">Điểm an toàn: 100</div>
-
-<div id="messages"></div>
-
-<div id="warning"></div>
-
-<div id="input">
-
-<input id="text" placeholder="Nhập tin nhắn...">
-<button onclick="send()">Gửi</button>
-
-</div>
-
-</div>
-
-<div id="panel">
-
-<h3>Bảng xếp hạng học sinh</h3>
-
-<table id="ranking">
-
-<tr>
-<th>Tên</th>
-<th>Điểm</th>
-</tr>
-
-</table>
-
-<h3>Biểu đồ lớp</h3>
-
-<canvas id="chart"></canvas>
-
-</div>
-
+    <!-- Bảng điểm kết quả -->
+    <div id="result-overlay" class="absolute inset-0 bg-black/80 hidden flex-col justify-center items-center z-50 p-8 text-center backdrop-blur-sm">
+        <div id="result-card" class="bg-white rounded-3xl p-10 max-w-4xl w-full transform scale-95 transition-transform duration-300 shadow-2xl">
+            <h2 id="result-title" class="text-5xl font-extrabold mb-4"></h2>
+            <p id="result-score" class="text-6xl font-black mb-6"></p>
+            <p id="result-message" class="text-2xl text-gray-700 mb-8 leading-relaxed"></p>
+            <button onclick="location.reload()" class="bg-[#2563eb] hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-full text-2xl transition-transform hover:scale-105 shadow-xl">Thử lại tình huống</button>
+        </div>
+    </div>
 </div>
 
 <script>
-
-let score=100
-let index=0
-let safeCount=0
-let dangerCount=0
-
-/* random */
-
-function rand(arr){
-return arr[Math.floor(Math.random()*arr.length)]
-}
-
-/* AI sinh câu lừa đảo */
-
-function generateScam(){
-
-let intro=[
-"Chào em",
-"Hi bạn",
-"Bạn ơi",
-"Mình hỏi chút",
-"Online không"
-]
-
-let scam=[
-"mình có cách nhận kim cương Free Fire",
-"mình đang phát quà game miễn phí",
-"mình có tài khoản game VIP",
-"mình có link nhận quà TikTok",
-"mình biết cách hack game"
-]
-
-let action=[
-"cho mình số điện thoại nhé",
-"vào link mình gửi thử đi",
-"kết bạn Zalo với mình nha",
-"chuyển 50k để kích hoạt",
-"gửi ảnh màn hình cho mình xem"
-]
-
-let trust=[
-"nhiều bạn đã nhận rồi",
-"không mất gì đâu",
-"mình làm cho nhiều bạn rồi",
-"đảm bảo thật",
-"mình chỉ nhắn riêng cho bạn thôi"
-]
-
-let secret=[
-"đừng nói với ai nhé",
-"bí mật nha",
-"chỉ mình bạn biết thôi"
-]
-
-let style=Math.floor(Math.random()*5)
-
-if(style==0)
-return rand(intro)+" "+rand(scam)
-
-if(style==1)
-return rand(scam)+" . "+rand(action)
-
-if(style==2)
-return rand(intro)+" . "+rand(scam)+" . "+rand(trust)
-
-if(style==3)
-return rand(scam)+" . "+rand(action)+" . "+rand(secret)
-
-if(style==4)
-return rand(intro)+" . "+rand(scam)+" . "+rand(action)
-
-}
-
-/* hiển thị chat */
-
-function addMessage(text,type){
-
-let row=document.createElement("div")
-row.className="row"
-
-let msg=document.createElement("div")
-msg.className="msg "+type
-msg.innerText=text
-
-if(type=="stranger"){
-
-let avatar=document.createElement("div")
-avatar.className="avatar"
-avatar.innerText="👤"
-
-row.appendChild(avatar)
-row.appendChild(msg)
-
-}else{
-
-msg.className="msg student"
-row.appendChild(msg)
-
-}
-
-document.getElementById("messages").appendChild(row)
-
-document.getElementById("messages").scrollTop=9999
-
-}
-
-/* gửi */
-
-function send(){
-
-let text=document.getElementById("text").value
-
-if(text=="") return
-
-addMessage(text,"student")
-
-evaluate(text)
-
-document.getElementById("text").value=""
-
-setTimeout(reply,800)
-
-}
-
-/* AI trả lời */
-
-function reply(){
-
-if(index<8){
-
-let text=generateScam()
-
-addMessage(text,"stranger")
-
-detect(text)
-
-index++
-
-}else{
-
-finish()
-
-}
-
-}
-
-/* phát hiện nguy cơ */
-
-function detect(text){
-
-let danger=["chuyển","tiền","ảnh","số điện thoại","bí mật"]
-
-for(let w of danger){
-
-if(text.toLowerCase().includes(w)){
-
-document.getElementById("warning").innerText=
-"⚠ Cảnh báo: Tin nhắn có dấu hiệu lừa đảo!"
-
-}
-
-}
-
-}
-
-/* đánh giá */
-
-function evaluate(text){
-
-let safe=["không","báo","thầy","cô","cha mẹ","công an","nhầm","lộn","méc","không cần"]
-
-let danger=["ok","được","gửi","có","dạ","okay","muốn","ừ","uh","vâng","ô sờ kê"]
-
-for(let w of safe){
-
-if(text.toLowerCase().includes(w)) score+=5
-
-}
-
-for(let w of danger){
-
-if(text.toLowerCase().includes(w)) score-=10
-
-}
-
-document.getElementById("score").innerText="Điểm an toàn: "+score
-
-}
-
-/* kết thúc */
-
-function finish(){
-
-let name=prompt("Nhập tên học sinh")
-
-let table=document.getElementById("ranking")
-
-let row=table.insertRow()
-
-row.insertCell(0).innerText=name
-row.insertCell(1).innerText=score
-
-if(score>=100) safeCount++
-else dangerCount++
-
-drawChart()
-
-/* kết luận */
-
-let result=""
-
-if(score>=100){
-
-result="✅ Em xử lý tình huống rất an toàn."
-
-}
-else if(score>=60){
-
-result="⚠ Em cần cảnh giác hơn với người lạ trên mạng."
-
-}
-else{
-
-result="❌ Em có nguy cơ bị lừa đảo trên mạng."
-
-}
-
-alert(result)
-
-}
-
-/* biểu đồ */
-
-function drawChart(){
-
-new Chart(document.getElementById("chart"),{
-
-type:"pie",
-
-data:{
-labels:["An toàn","Nguy cơ"],
-datasets:[{
-data:[safeCount,dangerCount]
-}]
-}
-
-})
-
-}
-
-/* bắt đầu chat */
-
-reply()
-
+    const chatBox = document.getElementById('chat-box');
+    const chatForm = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+    const resultOverlay = document.getElementById('result-overlay');
+    const resultTitle = document.getElementById('result-title');
+    const resultScore = document.getElementById('result-score');
+    const resultMessage = document.getElementById('result-message');
+
+    let turnCount = 0;
+    const maxTurns = 5;
+
+    window.onload = () => {
+        // Tuấn gửi tin nhắn mồi ngay khi load trang
+        setTimeout(() => {
+            addMessage("ai", "Ê bạn, đợt này ôn thi căng quá nhỉ. Mình có loại kẹo tỉnh táo này hay lắm, ngậm vào học xuyên đêm không biết mệt. Dùng thử một viên không?");
+        }, 500);
+    };
+
+    function addMessage(type, text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `flex ${type === 'user' ? 'justify-end' : 'justify-start'} animate-[fadeIn_0.3s_ease-out]`;
+        
+        // Giao diện bong bóng chat mới
+        const bubbleStyle = type === 'user' 
+            ? 'bg-[#2563eb] text-white rounded-[2rem] rounded-br-md' 
+            : 'bg-[#f0f2f5] text-gray-900 rounded-[2rem] rounded-bl-md border border-gray-100';
+
+        msgDiv.innerHTML = `
+            <div class="max-w-[75%] ${bubbleStyle} text-2xl px-6 py-4 shadow-sm leading-relaxed">
+                ${text}
+            </div>
+        `;
+        chatBox.appendChild(msgDiv);
+        
+        // Cuộn xuống dòng mới nhất
+        chatBox.scrollTo({
+            top: chatBox.scrollHeight,
+            behavior: 'smooth'
+        });
+    }
+
+    chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        addMessage("user", text);
+        userInput.value = '';
+        userInput.focus();
+        
+        turnCount++;
+        processAIResponse(text);
+    });
+
+    function processAIResponse(text) {
+        const winRegex = /(báo|mách|gọi|nói|chặn|block|bắt).*(công an|ba|mẹ|thầy|cô|ông|bà|người lớn)/i;
+        const agreeRegex = /chốt|ok|ừ|được|thử|đưa đây|chơi|lấy/i; 
+        const moneyRegex = /tiền|nghèo|không có/i;
+        const fearRegex = /sợ|mẹ|ba|thầy|cô|bạn|phát hiện|la|mắng|công an/i;
+
+        setTimeout(() => {
+            if (winRegex.test(text)) {
+                addMessage("ai", "Thôi thôi tao xin, làm gì mà căng thế! Không dùng thì thôi tao đi chỗ khác.");
+                setTimeout(() => showResult('win'), 1500);
+            } 
+            else if (agreeRegex.test(text)) {
+                addMessage("ai", "Chốt thế đi! Thế mới là anh em chứ. Đợi xíu tao mang qua liền, đảm bảo phê!");
+                setTimeout(() => showResult('fail'), 2000);
+            }
+            else if (moneyRegex.test(text)) {
+                addMessage("ai", "Trời ơi, không có tiền thì tao cho nợ! Chỗ anh em bạn bè tao bao mày lần đầu, khi nào có trả cũng được. Thử một xíu cho biết đi!");
+            } 
+            else if (fearRegex.test(text)) {
+                addMessage("ai", "Yên tâm đi, kẹo này ngụy trang kỹ lắm, nhìn y như kẹo dâu bình thường. Cứ ngậm đảm bảo thầy cô hay ba mẹ, kể cả công an cũng không ai biết đâu!");
+            } 
+            else {
+                if (turnCount >= maxTurns) {
+                    addMessage("ai", "Mày nhát cáy thế! Thôi chán mày quá tao rủ đứa khác.");
+                    setTimeout(() => showResult('draw'), 1500);
+                } else {
+                    const defaultReplies = [
+                        "Điêu, ngậm viên này vào đảm bảo thi điểm cao. Sợ gì?",
+                        "Thử một tí thôi không nghiện được đâu mà lo, tao dùng suốt có sao đâu.",
+                        "Mày không thử là tụt hậu đấy, bọn bạn mình dùng đầy ra kia kìa."
+                    ];
+                    const reply = defaultReplies[Math.floor(Math.random() * defaultReplies.length)];
+                    addMessage("ai", reply);
+                }
+            }
+        }, 1000); 
+    }
+
+    function showResult(status) {
+        resultOverlay.classList.remove('hidden');
+        resultOverlay.classList.add('flex');
+        
+        setTimeout(() => {
+            document.getElementById('result-card').classList.remove('scale-95');
+            document.getElementById('result-card').classList.add('scale-100');
+        }, 50);
+
+        if (status === 'win') {
+            resultTitle.innerText = "🏆 XỬ LÝ XUẤT SẮC!";
+            resultTitle.className = "text-5xl font-extrabold mb-4 text-green-600";
+            resultScore.innerText = "Điểm an toàn: 100/100";
+            resultScore.className = "text-5xl font-black mb-6 text-green-500";
+            resultMessage.innerText = "Bạn đã có kỹ năng bảo vệ bản thân rất tốt! Việc dứt khoát từ chối và đe dọa báo cho người lớn hoặc cơ quan chức năng là cách hiệu quả nhất để chấm dứt sự rủ rê của kẻ xấu.";
+        } else if (status === 'fail') {
+            resultTitle.innerText = "❌ RẤT NGUY HIỂM!";
+            resultTitle.className = "text-5xl font-extrabold mb-4 text-red-600";
+            resultScore.innerText = "Điểm an toàn: 0/100";
+            resultScore.className = "text-5xl font-black mb-6 text-red-500";
+            resultMessage.innerText = "Bạn đã sập bẫy và đồng ý dùng thử! Các loại ma túy ngụy trang (núp bóng kẹo, nước trái cây) chỉ cần thử 1 lần là có thể gây nghiện và tàn phá hệ thần kinh. Phải kiên quyết nói KHÔNG!";
+        } else {
+            resultTitle.innerText = "⚠️ CẦN DỨT KHOÁT HƠN";
+            resultTitle.className = "text-5xl font-extrabold mb-4 text-yellow-600";
+            resultScore.innerText = "Điểm an toàn: 50/100";
+            resultScore.className = "text-5xl font-black mb-6 text-yellow-500";
+            resultMessage.innerText = "Tuy bạn chưa đồng ý nhưng cách từ chối của bạn còn quá yếu ớt. Kẻ xấu sẽ còn tiếp tục bám theo dụ dỗ. Hãy từ chối thẳng thừng và dọa báo người lớn!";
+        }
+    }
 </script>
-
 </body>
 </html>
